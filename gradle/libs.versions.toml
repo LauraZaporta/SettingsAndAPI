@@ -1,6 +1,6 @@
 [versions]
 
-kotlin = "2.1.0"
+kotlin = "2.1.0-firework.32"
 compose = "1.7.1"
 agp = "8.6.1"
 androidx-activityCompose = "1.9.3"
@@ -12,6 +12,7 @@ androidx-lifecycle = "2.8.4"
 androidx-navigation = "2.8.0-alpha10"
 kotlinx-serialization = "1.7.3"
 kotlinx-datetime = "0.6.1"
+hotreload = "1.0.0-dev.32.1"
 
 [libraries]
 
@@ -45,3 +46,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-hotreload = {id = "org.jetbrains.compose-hot-reload", version.ref = "hotreload"}

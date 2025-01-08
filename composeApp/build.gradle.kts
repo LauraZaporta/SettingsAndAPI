@@ -1,13 +1,20 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.reload.ComposeHotRun
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
+}
+
+composeCompiler {
+    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
 
 kotlin {
@@ -120,4 +127,8 @@ compose.desktop {
             }
         }
     }
+}
+
+tasks.register<ComposeHotRun>("runHot") {
+    mainClass.set("HotrunKt")
 }
