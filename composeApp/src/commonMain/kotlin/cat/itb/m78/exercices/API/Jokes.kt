@@ -66,7 +66,6 @@ class JokeVM : ViewModel() {
 @Composable
 fun Jokes() {
     val jokeVM = viewModel { JokeVM() }
-
     val joke = jokeVM.joke.value
 
     if (joke != null) {
