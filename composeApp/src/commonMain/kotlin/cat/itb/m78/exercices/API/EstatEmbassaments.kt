@@ -3,17 +3,20 @@ package cat.itb.m78.exercices.API
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import m78exercices.composeapp.generated.resources.Res
 
 object Destination {
     @Serializable
@@ -52,57 +56,85 @@ data class Emb(
     @SerialName("percentatge_volum_embassat") val perc: Double,
     @SerialName("volum_embassat") val volume: Double
 )
+//API
+object MyApi {
+    private const val URL = "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.json?"
+    private val client = HttpClient() {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
+        }
+    }
+    suspend fun list() = client.get(URL).body<List<Emb>>()
+}
 
 class EmbVM : ViewModel() {
-    //API
-    object MyApi {
-        private const val URL = "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.json?estaci=Embassament%20de%20Sant%20Pon%C3%A7%20(Clariana%20de%20Cardener)"
-        private val client = HttpClient() {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
-        suspend fun list() = client.get(URL).body<List<Emb>>()
-    }
-    var EmbList = listOf<Emb>()
+    val embList = mutableStateOf<List<Emb>>(emptyList())
+    val apiCharged = mutableStateOf(false)
+
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            EmbList = MyApi.list()
+            embList.value = MyApi.list()
+            apiCharged.value = true
+            reassignEmbListPositions()
         }
     }
 
     //SETTINGS
     private val settings: Settings = Settings()
 
-    private var currentEmbName: String? = settings.getStringOrNull("key")
-    var currentEmb : Emb? = null
+    private var currentEmbName: String? = settings.getStringOrNull("name")
+    private var currentPosition: Int = settings.getInt(
+        "pos",
+        defaultValue = 0
+    )
+    val currentEmb = mutableStateOf<Emb?>(null)
+    private val currentEmbPosition = mutableStateOf<Int?>(null)
 
     fun assignCurrentEmb(embName : String) {
+        var position = 0
         currentEmbName = embName
-        settings.putString("key", embName)
-        for (emb in EmbList){
+        settings.putString("name", embName)
+
+        for (emb in embList.value){
             if (emb.name == embName){
-                currentEmb = emb
+                currentEmb.value = emb
+                currentEmbPosition.value = position
+                settings.putInt("pos", position)
             }
+            position += 1
+        }
+    }
+    fun reassignEmbListPositions() {
+        if (apiCharged.value){
+            val embListMutable = embList.value.toMutableList()
+            val firstEmbOG = embListMutable[0]
+
+            for (emb in embList.value){
+                if (emb.name == currentEmbName){
+                    embListMutable[0] = emb
+                    embListMutable[currentPosition] = firstEmbOG
+                }
+            }
+            embList.value = embListMutable
         }
     }
 }
 
 @Composable
-fun ListScreen(goToEmbScreen:() -> Unit){
-    val embVM = viewModel { EmbVM() }
-
-    ListScreenArguments(goToEmbScreen, embVM.EmbList, embVM::assignCurrentEmb)
+fun ListScreen(embList : List<Emb>, assignCurrentEmb:(String) -> Unit, goToEmbScreen:() -> Unit){
+    ListScreenArguments(goToEmbScreen, embList, assignCurrentEmb)
 }
 @Composable
 fun ListScreenArguments(goToEmbScreen:() -> Unit, emb: List<Emb>, assignEmb: (String) -> Unit){
     LazyColumn(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
-        itemsIndexed(emb) { _, embass ->
+        items(emb) {embass ->
             Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(end = 15.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
-                    Button( onClick = {assignEmb(embass.name)}
+                Column(modifier = Modifier.padding(end = 15.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Button( onClick = {assignEmb(embass.name)
+                                        goToEmbScreen()}
                     ){
                         Text(embass.name)
                     }
@@ -113,13 +145,11 @@ fun ListScreenArguments(goToEmbScreen:() -> Unit, emb: List<Emb>, assignEmb: (St
 }
 
 @Composable
-fun EmbScreen(goToListScreen:() -> Unit){
-    val embVM = viewModel { EmbVM() }
-
-    EmbScreenArguments(goToListScreen, embVM.currentEmb)
+fun EmbScreen(currentEmb: Emb?, goToListScreen:() -> Unit, reassign:() -> Unit){
+    EmbScreenArguments(goToListScreen, currentEmb, reassign)
 }
 @Composable
-fun EmbScreenArguments(goToListScreen: () -> Unit, currentEmb: Emb?) {
+fun EmbScreenArguments(goToListScreen: () -> Unit, currentEmb: Emb?, reassign:() -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -135,18 +165,27 @@ fun EmbScreenArguments(goToListScreen: () -> Unit, currentEmb: Emb?) {
             // Si currentEmb és null, no mostrem res o mostrem un missatge.
             Text("No hi ha informació disponible.")
         }
+        Spacer(Modifier.height(20.dp))
+        Button( onClick = {goToListScreen()
+            reassign()}){
+            Text("Torna a la llista")
+        }
     }
 }
 
 @Composable
 fun EmbNavigation() {
+    val embVM = viewModel { EmbVM() }
     val navController = rememberNavController()
+
     NavHost(navController = navController, startDestination = Destination.ListScreen) {
         composable<Destination.ListScreen> {
-            ListScreen( goToEmbScreen = {navController.navigate(Destination.EmbScreen)})
+            ListScreen( goToEmbScreen = {navController.navigate(Destination.EmbScreen)},
+                embList = embVM.embList.value, assignCurrentEmb = embVM :: assignCurrentEmb)
         }
         composable<Destination.EmbScreen> {
-            EmbScreen( goToListScreen = {navController.navigate(Destination.ListScreen)})
+            EmbScreen( goToListScreen = {navController.navigate(Destination.ListScreen)},
+                currentEmb = embVM.currentEmb.value, reassign = embVM :: reassignEmbListPositions)
         }
     }
 }
