@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import coil3.compose.AsyncImage
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
@@ -71,7 +72,7 @@ object MyApi {
 
 class EmbVM : ViewModel() {
     val embList = mutableStateOf<List<Emb>>(emptyList())
-    val apiCharged = mutableStateOf(false)
+    private val apiCharged = mutableStateOf(false)
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
@@ -89,7 +90,6 @@ class EmbVM : ViewModel() {
         "pos",
         defaultValue = 0
     )
-    val currentEmb = mutableStateOf<Emb?>(null)
     private val currentEmbPosition = mutableStateOf<Int?>(null)
 
     fun assignCurrentEmb(embName : String) {
@@ -99,7 +99,6 @@ class EmbVM : ViewModel() {
 
         for (emb in embList.value){
             if (emb.name == embName){
-                currentEmb.value = emb
                 currentEmbPosition.value = position
                 settings.putInt("pos", position)
             }
@@ -120,11 +119,20 @@ class EmbVM : ViewModel() {
             embList.value = embListMutable
         }
     }
+    fun searchEmbByName() : Emb? {
+        for (emb in embList.value){
+            if (emb.name == currentEmbName){
+                return emb
+            }
+        }
+        return null
+    }
 }
 
 @Composable
-fun ListScreen(embList : List<Emb>, assignCurrentEmb:(String) -> Unit, goToEmbScreen:() -> Unit){
-    ListScreenArguments(goToEmbScreen, embList, assignCurrentEmb)
+fun ListScreen(goToEmbScreen:() -> Unit){
+    val embVM = viewModel { EmbVM() }
+    ListScreenArguments(goToEmbScreen, embVM.embList.value, embVM :: assignCurrentEmb)
 }
 @Composable
 fun ListScreenArguments(goToEmbScreen:() -> Unit, emb: List<Emb>, assignEmb: (String) -> Unit){
@@ -134,7 +142,7 @@ fun ListScreenArguments(goToEmbScreen:() -> Unit, emb: List<Emb>, assignEmb: (St
                 Column(modifier = Modifier.padding(end = 15.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(15.dp),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Button( onClick = {assignEmb(embass.name)
-                                        goToEmbScreen()}
+                        goToEmbScreen()}
                     ){
                         Text(embass.name)
                     }
@@ -145,11 +153,13 @@ fun ListScreenArguments(goToEmbScreen:() -> Unit, emb: List<Emb>, assignEmb: (St
 }
 
 @Composable
-fun EmbScreen(currentEmb: Emb?, goToListScreen:() -> Unit, reassign:() -> Unit){
-    EmbScreenArguments(goToListScreen, currentEmb, reassign)
+fun EmbScreen(goToListScreen:() -> Unit){
+    val embVM = viewModel { EmbVM() }
+    EmbScreenArguments(goToListScreen, embVM :: reassignEmbListPositions, embVM :: searchEmbByName)
 }
 @Composable
-fun EmbScreenArguments(goToListScreen: () -> Unit, currentEmb: Emb?, reassign:() -> Unit) {
+fun EmbScreenArguments(goToListScreen: () -> Unit, reassign:() -> Unit, searchEmb:() -> Emb?) {
+    val currentEmb = searchEmb()
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -175,17 +185,14 @@ fun EmbScreenArguments(goToListScreen: () -> Unit, currentEmb: Emb?, reassign:()
 
 @Composable
 fun EmbNavigation() {
-    val embVM = viewModel { EmbVM() }
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Destination.ListScreen) {
         composable<Destination.ListScreen> {
-            ListScreen( goToEmbScreen = {navController.navigate(Destination.EmbScreen)},
-                embList = embVM.embList.value, assignCurrentEmb = embVM :: assignCurrentEmb)
+            ListScreen( goToEmbScreen = {navController.navigate(Destination.EmbScreen)})
         }
         composable<Destination.EmbScreen> {
-            EmbScreen( goToListScreen = {navController.navigate(Destination.ListScreen)},
-                currentEmb = embVM.currentEmb.value, reassign = embVM :: reassignEmbListPositions)
+            EmbScreen( goToListScreen = {navController.navigate(Destination.ListScreen)})
         }
     }
 }
