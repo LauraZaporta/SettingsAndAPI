@@ -1,0 +1,12 @@
+CREATE TABLE messages (
+    msg TEXT NOT NULL
+);
+
+insert:
+INSERT INTO messages(msg) VALUES (?);
+
+selectAll:
+SELECT * FROM messages;
+
+deleteAll:
+DELETE FROM messages;

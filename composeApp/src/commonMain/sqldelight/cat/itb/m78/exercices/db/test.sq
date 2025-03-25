@@ -1,0 +1,16 @@
+CREATE TABLE test (
+  id INTEGER PRIMARY KEY NOT NULL,
+  text TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM test;
+
+insert:
+INSERT INTO test(text) VALUES (?);
+
+find:
+SELECT * FROM test WHERE id == (?);
+
+deleteAll:
+DELETE FROM test;
