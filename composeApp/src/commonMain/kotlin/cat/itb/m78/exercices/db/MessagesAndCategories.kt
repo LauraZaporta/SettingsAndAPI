@@ -1,5 +1,6 @@
 package cat.itb.m78.exercices.db
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -23,16 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.API.Emb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import m78exercices.composeapp.generated.resources.Res
 
-class DBViewModel: ViewModel() {
+class MessagesCatViewModel: ViewModel() {
     private val messages = database.messagesQueries
-    val listMessages = mutableStateOf<List<String>>(selectAll())
-    val newMessage = mutableStateOf("")
+    private val listMessages = mutableStateOf<List<String>>(selectAll())
+    private val newMessage = mutableStateOf("")
 
     fun insert() {
         viewModelScope.launch {
@@ -49,18 +48,20 @@ class DBViewModel: ViewModel() {
         messages.deleteAll()
         listMessages.value = selectAll()
     }
+    fun assignLanguageCat() {
+
+    }
 }
 
 @Composable
-fun messages(){
+fun messagesCat(){
     val DBVM = viewModel { DBViewModel() }
-    messagesArguments(DBVM.listMessages.value, DBVM.newMessage, DBVM::insert, DBVM::deleteAll)
+    messagesCatArguments(DBVM.listMessages.value, DBVM.newMessage, DBVM::insert, DBVM::deleteAll)
 }
 
 @Composable
-fun messagesArguments(listMessages: List<String>, message: MutableState<String>,
-                      addMessageToDB:() -> Unit, deleteAllMessages:() -> Unit){
-
+fun messagesCatArguments(listMessages: List<String>, message: MutableState<String>,
+                      addMessageToDB:() -> Unit, deleteAllMessages:() -> Unit, assignLanguage:(String) -> Unit){
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center)
     {
@@ -75,6 +76,15 @@ fun messagesArguments(listMessages: List<String>, message: MutableState<String>,
         }
         Button( onClick = deleteAllMessages ){
             Text("Delete all messages")
+        }
+        Row(modifier = Modifier.fillMaxSize().padding(15.dp), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center){
+            Button (onClick = {assignLanguage("Cat")}) {
+                Text("Català")
+            }
+            Button (onClick = {assignLanguage("Cast")}) {
+                Text("Castellà")
+            }
         }
         LazyColumn(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
             items(listMessages) {msg ->

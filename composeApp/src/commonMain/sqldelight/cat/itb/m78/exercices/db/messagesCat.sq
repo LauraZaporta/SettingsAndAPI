@@ -1,0 +1,13 @@
+CREATE TABLE messagesCat (
+    msg TEXT NOT NULL,
+    language TEXT NOT NULL
+);
+
+insert:
+INSERT INTO messages(msg, language) VALUES (?,?);
+
+selectAll:
+SELECT * FROM messages;
+
+deleteAll:
+DELETE FROM messages;
