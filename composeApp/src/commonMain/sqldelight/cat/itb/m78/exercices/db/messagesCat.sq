@@ -4,10 +4,13 @@ CREATE TABLE messagesCat (
 );
 
 insert:
-INSERT INTO messages(msg, language) VALUES (?,?);
+INSERT INTO messagesCat (msg, language) VALUES (?,?);
 
 selectAll:
-SELECT * FROM messages;
+SELECT msg FROM messagesCat;
+
+selectFilterLang:
+SELECT msg FROM messagesCat WHERE language = ?;
 
 deleteAll:
-DELETE FROM messages;
+DELETE FROM messagesCat;

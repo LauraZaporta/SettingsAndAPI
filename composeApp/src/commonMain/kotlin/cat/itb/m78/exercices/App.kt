@@ -11,6 +11,7 @@ import cat.itb.m78.exercices.API.Jokes
 import cat.itb.m78.exercices.API.Countries
 import cat.itb.m78.exercices.API.EmbNavigation
 import cat.itb.m78.exercices.db.messages
+import cat.itb.m78.exercices.db.messagesCat
 import cat.itb.m78.exercices.theme.AppTheme
 import counterScreen
 import org.jetbrains.compose.reload.DevelopmentEntryPoint
@@ -18,5 +19,5 @@ import testDB
 
 @Composable
 internal fun App() = AppTheme {
-    messages()
+    messagesCat()
 }

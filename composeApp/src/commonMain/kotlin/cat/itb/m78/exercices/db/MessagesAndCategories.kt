@@ -29,39 +29,44 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MessagesCatViewModel: ViewModel() {
-    private val messages = database.messagesQueries
-    private val listMessages = mutableStateOf<List<String>>(selectAll())
-    private val newMessage = mutableStateOf("")
+    private val messages = database.messagesCatQueries
+    val listMessages = mutableStateOf<List<String>>(selectAll())
+    val newMessage = mutableStateOf("")
+    val lang = mutableStateOf("")
+    val filterLang = mutableStateOf("")
 
     fun insert() {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                messages.insert(newMessage.value)
+                messages.insert(newMessage.value, lang.value)
                 listMessages.value = selectAll()
+                lang.value = ""
             }
         }
     }
     private fun selectAll() : MutableList<String> {
         return messages.selectAll().executeAsList().toMutableList()
     }
+    fun FilterByLang(){
+        listMessages.value = messages.selectFilterLang(filterLang.value).executeAsList().toMutableList()
+    }
     fun deleteAll() {
         messages.deleteAll()
         listMessages.value = selectAll()
-    }
-    fun assignLanguageCat() {
-
     }
 }
 
 @Composable
 fun messagesCat(){
-    val DBVM = viewModel { DBViewModel() }
-    messagesCatArguments(DBVM.listMessages.value, DBVM.newMessage, DBVM::insert, DBVM::deleteAll)
+    val DBVM = viewModel { MessagesCatViewModel() }
+    messagesCatArguments(DBVM.listMessages.value, DBVM.newMessage, DBVM::insert, DBVM::deleteAll,
+    DBVM.lang, DBVM.filterLang, DBVM::FilterByLang)
 }
 
 @Composable
 fun messagesCatArguments(listMessages: List<String>, message: MutableState<String>,
-                      addMessageToDB:() -> Unit, deleteAllMessages:() -> Unit, assignLanguage:(String) -> Unit){
+                      addMessageToDB:() -> Unit, deleteAllMessages:() -> Unit, lang: MutableState<String>,
+                      filterLang : MutableState<String>, filterByLang:() -> Unit){
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center)
     {
@@ -77,13 +82,24 @@ fun messagesCatArguments(listMessages: List<String>, message: MutableState<Strin
         Button( onClick = deleteAllMessages ){
             Text("Delete all messages")
         }
-        Row(modifier = Modifier.fillMaxSize().padding(15.dp), verticalAlignment = Alignment.CenterVertically,
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center){
-            Button (onClick = {assignLanguage("Cat")}) {
+            Button (onClick = {lang.value = "Cat"}) {
                 Text("Català")
             }
-            Button (onClick = {assignLanguage("Cast")}) {
+            Button (onClick = {lang.value = "Cast"}) {
                 Text("Castellà")
+            }
+        }
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center){
+            Button (onClick = {filterLang.value = "Cat"
+                               filterByLang()}) {
+                Text("Show catalan messages")
+            }
+            Button (onClick = {filterLang.value = "Cast"
+                               filterByLang()}) {
+                Text("Show spanish messages")
             }
         }
         LazyColumn(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
