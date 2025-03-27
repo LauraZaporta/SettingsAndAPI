@@ -19,5 +19,5 @@ import testDB
 
 @Composable
 internal fun App() = AppTheme {
-    messagesCat()
+
 }
