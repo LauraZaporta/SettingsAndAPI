@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
+@Serializable
 object Destination{
     @Serializable
     data object ListScreen
@@ -19,11 +20,13 @@ fun SorceriesNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Destination.ListScreen) {
         composable<Destination.ListScreen> {
-            SorceriesListScreen (goToSelectedSorcery = {navController.navigate(Destination.ItemScreen)})
+            SorceriesListScreen (goToSelectedSorcery = {
+                navController.navigate(Destination.ItemScreen(it))
+            })
         }
-        composable<Destination> { backStack ->
+        composable<Destination.ItemScreen> { backStack ->
             val id = backStack.toRoute<Destination.ItemScreen>().id
-            SorceryScreen( id = id )
+            SorceryScreen( goToSorceryList = {navController.navigate(Destination.ListScreen)}, id = id )
         }
     }
 }

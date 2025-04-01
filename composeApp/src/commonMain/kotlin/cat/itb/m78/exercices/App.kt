@@ -10,6 +10,7 @@ import cat.itb.m78.exercices.API.CountriesArgument
 import cat.itb.m78.exercices.API.Jokes
 import cat.itb.m78.exercices.API.Countries
 import cat.itb.m78.exercices.API.EmbNavigation
+import cat.itb.m78.exercices.ProjecteApiBD.SorceriesNavigation
 import cat.itb.m78.exercices.db.messages
 import cat.itb.m78.exercices.db.messagesCat
 import cat.itb.m78.exercices.theme.AppTheme
@@ -19,5 +20,5 @@ import testDB
 
 @Composable
 internal fun App() = AppTheme {
-
+    SorceriesNavigation()
 }

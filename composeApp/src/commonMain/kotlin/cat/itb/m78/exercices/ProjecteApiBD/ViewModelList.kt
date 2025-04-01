@@ -7,17 +7,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SorceriesVMList: ViewModel() {
-    val sorceriesList = mutableStateOf<List<Sorcery>?>(null)
+    val sorceriesList = mutableStateOf<List<SorceryData>>(emptyList())
     val loading = mutableStateOf(true)
     val searchQuery = mutableStateOf("")
 
-    fun getLoadedList() : List<Sorcery>{
-        while()
-    }
-
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            sorceriesList.value = SorceriesAPI.list()
+            sorceriesList.value = SorceriesAPI("").list().data
+            loading.value = false
         }
     }
 }

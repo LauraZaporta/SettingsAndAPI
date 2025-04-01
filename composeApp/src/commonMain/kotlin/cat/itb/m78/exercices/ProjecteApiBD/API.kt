@@ -12,8 +12,12 @@ import kotlinx.serialization.json.Json
 
 //https://eldenring.fanapis.com/api/sorceries/17f69526092l0hykrkfqubdcrri5ri
 @Serializable
-data class Sorcery(
-    @SerialName("Data") val data : SorceryData
+data class SorceryList(
+    @SerialName("data") val data : List<SorceryData>
+)
+@Serializable
+data class SingleSorcery(
+    @SerialName("data") val data : SorceryData
 )
 @Serializable
 data class SorceryData(
@@ -24,8 +28,9 @@ data class SorceryData(
     @SerialName("effects") val effect: String
 )
 
-object SorceriesAPI {
+class SorceriesAPI(id : String) {
     private val url = "https://eldenring.fanapis.com/api/sorceries?limit=100"
+    private val urlDetail = "https://eldenring.fanapis.com/api/sorceries/$id"
     private val client = HttpClient() {
         install(ContentNegotiation) {
             json(Json {
@@ -34,5 +39,10 @@ object SorceriesAPI {
         }
     }
 
-    suspend fun list() = client.get(url).body<List<Sorcery>>()
+    suspend fun list(): SorceryList {
+        return client.get(url).body()
+    }
+    suspend fun detail(): SingleSorcery {
+        return client.get(urlDetail).body()
+    }
 }
