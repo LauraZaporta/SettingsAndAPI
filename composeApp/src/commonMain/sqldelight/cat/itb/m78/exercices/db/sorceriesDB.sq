@@ -1,3 +1,12 @@
 CREATE TABLE favSorceries (
     ID TEXT NOT NULL
 );
+
+selectFavs:
+SELECT ID FROM favSorceries;
+
+insertFav:
+INSERT INTO favSorceries (ID) VALUES (?);
+
+deleteFav:
+DELETE FROM favSorceries WHERE ID = ?;
