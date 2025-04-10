@@ -1,0 +1,10 @@
+CREATE TABLE skips (
+    ID INTEGER NOT NULL,
+    DATE TEXT NOT NULL
+);
+
+insertSkip:
+INSERT INTO skips (ID, DATE) VALUES (?, ?);
+
+selectSkips:
+SELECT ID, DATE FROM skips;
