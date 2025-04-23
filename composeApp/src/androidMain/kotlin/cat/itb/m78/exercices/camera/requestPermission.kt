@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -22,9 +22,8 @@ fun FeatureThatRequiresCameraPermission(goToCameraScreen:() -> Unit) {
         android.Manifest.permission.CAMERA
     )
     if (cameraPermissionState.status.isGranted) {
-        Text("Camera permission Granted")
         goToCameraScreen()
-
+        Text("Camera permission Granted")
     } else {
         Column {
             val textToShow = if (cameraPermissionState.status.shouldShowRationale) {
@@ -41,11 +40,11 @@ fun FeatureThatRequiresCameraPermission(goToCameraScreen:() -> Unit) {
             Text(textToShow)
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally){
+                Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
+                    Text("Request permission")
+                }
+            }
 
-            }
-            Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                Text("Request permission")
-            }
         }
     }
 }
