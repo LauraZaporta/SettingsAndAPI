@@ -12,11 +12,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
     id("app.cash.sqldelight") version "2.0.2"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 composeCompiler {
     featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
+
 
 kotlin {
     jvmToolchain(11)
@@ -56,13 +58,13 @@ kotlin {
             implementation(libs.androidx.navigation.composee)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
+
             implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
             implementation("io.coil-kt.coil3:coil-compose:3.1.0")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
             implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
             implementation("com.russhwolf:multiplatform-settings-serialization:1.3.0")
             implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.2")}
-
 
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -83,6 +85,7 @@ kotlin {
             implementation("androidx.camera:camera-compose:1.5.0-alpha06")
             implementation("androidx.camera:camera-lifecycle:1.5.0-alpha06")
             implementation("androidx.camera:camera-extensions:1.5.0-alpha06")
+            implementation("com.google.maps.android:maps-compose:6.6.0")
         }
 
         jvmMain.dependencies {
@@ -161,4 +164,16 @@ sqldelight {
             verifyMigrations.set(true)
         }
     }
+}
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. If the secrets.properties file does not exist, create it in the same folder as the local.properties file.
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.defaults.properties"
 }
