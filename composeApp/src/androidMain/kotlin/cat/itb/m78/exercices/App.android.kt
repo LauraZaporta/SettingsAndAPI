@@ -8,15 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import cat.itb.m78.exercices.camera.CameraNav
 import cat.itb.m78.exercices.maps.MapsScreen
+import cat.itb.m78.exercices.mapsApp.Navigation
 
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { MapsScreen() }
+        setContent { Navigation() }
     }
 }
 
 @Preview
 @Composable
-fun AppPreview() { MapsScreen() }
+fun AppPreview() { Navigation() }
