@@ -123,7 +123,7 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
             Spacer(Modifier.height(10.dp))
             Row(){
                 Button(
-                    modifier = Modifier.height(40.dp).width(100.dp).padding(3.dp),
+                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
                     onClick = { },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -135,7 +135,7 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
                         fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
                 }
                 Button(
-                    modifier = Modifier.height(40.dp).width(100.dp).padding(3.dp),
+                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
                     onClick = { },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -147,9 +147,9 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
                         fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
                 }
                 Button(
-                    modifier = Modifier.height(40.dp).width(100.dp).padding(3.dp),
+                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
                     onClick = { addImageProcess.value = false},
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Black)
                 ) {
