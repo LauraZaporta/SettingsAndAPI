@@ -78,6 +78,7 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation("androidx.startup:startup-runtime:1.2.0")
             implementation("app.cash.sqldelight:android-driver:2.0.2")
             implementation("com.google.accompanist:accompanist-permissions:0.37.2")
             implementation("androidx.camera:camera-core:1.5.0-alpha06")

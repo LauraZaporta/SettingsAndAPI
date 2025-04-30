@@ -69,12 +69,12 @@ fun AddMarkerScreen(){
     val addMarkerVM = viewModel { VMAddMarker() }
 
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,
-        addMarkerVM.addImageProcess)
+        addMarkerVM.addImageProcess, addMarkerVM :: addMarker)
 }
 
 @Composable
 fun AddMarkerScreenArguments(title : MutableState<String>, description : MutableState<String>,
-                             addImageProcess : MutableState<Boolean>){
+                             addImageProcess : MutableState<Boolean>, addMarker: () -> Unit){
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -164,7 +164,7 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
         Spacer(Modifier.height(30.dp))
         Button(
             modifier = Modifier.height(60.dp).width(100.dp),
-            onClick = { },
+            onClick = { addMarker() },
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Black)
