@@ -65,7 +65,7 @@ private fun CameraPermission() {
 }
 
 @Composable
-fun AddMarkerScreen(){
+fun AddMarkerScreen(lat : Double, lon : Double){
     val addMarkerVM = viewModel { VMAddMarker() }
 
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,

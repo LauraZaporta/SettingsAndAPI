@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.em
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import m78exercices.composeapp.generated.resources.Audiowide_Regular
@@ -43,6 +43,8 @@ object Destiny{
     data object ListScreen
     @Serializable
     data object MapScreen
+    @Serializable
+    data class AddMarkerScreen(val lat : Double, val lon : Double)
 }
 
 @Composable
@@ -66,16 +68,21 @@ fun Navigation(){
                     label = { Text(text = "Map", fontSize = 3.5.em) },
                     selected = false,
                     icon = { Icon(Icons.Default.Place, contentDescription = "Map") },
-                    onClick = { navController.navigate( Destiny.MapScreen ) }
+                    onClick = { navController.navigate( Destiny.MapScreen )
+                        scope.launch {drawerState.close()}
+                    }
                 )
                 NavigationDrawerItem(
                     label = { Text(text = "List", fontSize = 3.5.em) },
                     selected = false,
                     icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-                    onClick = { navController.navigate( Destiny.ListScreen ) }
+                    onClick = { navController.navigate( Destiny.ListScreen )
+                        scope.launch {drawerState.close()}
+                    }
                 )
             }
-        }
+        },
+        gesturesEnabled = false
     ) {
         Scaffold (bottomBar = {
             NavigationBar (containerColor = Color.Black){
@@ -107,10 +114,17 @@ fun Navigation(){
             ) {
                 NavHost(navController = navController, startDestination = Destiny.MapScreen) {
                     composable<Destiny.MapScreen> {
-                        MapScreen()
+                        MapScreen( goToAddMarkerScreen = { lat, lon ->
+                            navController.navigate(Destiny.AddMarkerScreen(lat, lon))
+                        } )
                     }
                     composable<Destiny.ListScreen> {
                         MarkerListScreen()
+                    }
+                    composable<Destiny.AddMarkerScreen> { backStack ->
+                        val lat = backStack.toRoute<Destiny.AddMarkerScreen>().lat
+                        val lon = backStack.toRoute<Destiny.AddMarkerScreen>().lon
+                        AddMarkerScreen(lat, lon)
                     }
                 }
             }
