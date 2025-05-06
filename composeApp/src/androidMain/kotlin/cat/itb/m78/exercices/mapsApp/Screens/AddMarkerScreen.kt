@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +20,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -64,6 +67,22 @@ private fun CameraPermission() {
 }
 
 @Composable
+fun GeneratePhotoButton(function : () -> Unit, text : String){
+    Button(
+        modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
+        onClick = { function() },
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Black)
+    ) {
+        Text(text,
+            color = Color.White,
+            fontSize = 3.em,
+            fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
+    }
+}
+
+@Composable
 fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit){
     val addMarkerVM = viewModel { VMAddMarker() }
 
@@ -71,13 +90,13 @@ fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit){
     addMarkerVM.lon.value = lon
 
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,
-        addMarkerVM.addImageProcess, addMarkerVM :: addMarker, goToMapScreen)
+        addMarkerVM.addImageProcess, addMarkerVM.points, addMarkerVM :: addMarker, goToMapScreen)
 }
 
 @Composable
 fun AddMarkerScreenArguments(title : MutableState<String>, description : MutableState<String>,
-                             addImageProcess : MutableState<Boolean>, addMarker: () -> Unit,
-                             goToMapScreen: () -> Unit){
+                             addImageProcess : MutableState<Boolean>, points : MutableState<Float>,
+                             addMarker: () -> Unit, goToMapScreen: () -> Unit){
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -105,6 +124,32 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
         )
         Spacer(Modifier.height(30.dp))
 
+        // Puntuació del bar
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()){
+            Text("BAR SCORE     0",
+                fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                modifier = Modifier.padding(top = 15.dp))
+            Spacer(Modifier.width(20.dp))
+            Row(modifier = Modifier.width(150.dp).padding(bottom = 15.dp)){
+                Slider(
+                    value = points.value,
+                    onValueChange = { points.value = it },
+                    colors = SliderDefaults.colors(
+                        thumbColor = Color.Black,
+                        activeTrackColor = Color.Black,
+                        inactiveTrackColor = Color.White,
+                    ),
+                    steps = 10,
+                    valueRange = 0f..10f
+                )
+            }
+            Spacer(Modifier.width(20.dp))
+            Text("10",
+                fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                modifier = Modifier.padding(top = 15.dp))
+        }
+        Spacer(Modifier.height(15.dp))
+
         // Imatge
         Column(modifier = Modifier
             .border(BorderStroke(1.dp, SolidColor(Color.Black)),
@@ -125,42 +170,9 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
         if (addImageProcess.value){
             Spacer(Modifier.height(10.dp))
             Row(){
-                Button(
-                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
-                    onClick = { },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black)
-                ) {
-                    Text("Photo",
-                        color = Color.White,
-                        fontSize = 3.em,
-                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
-                }
-                Button(
-                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
-                    onClick = { },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black)
-                ) {
-                    Text("Search",
-                        color = Color.White,
-                        fontSize = 3.em,
-                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
-                }
-                Button(
-                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
-                    onClick = { addImageProcess.value = false},
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black)
-                ) {
-                    Text("Cancel",
-                        color = Color.White,
-                        fontSize = 3.em,
-                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
-                }
+                GeneratePhotoButton({}, "Photo")
+                GeneratePhotoButton({}, "Gallery")
+                GeneratePhotoButton({addImageProcess.value = false}, "Cancel")
             }
         }
 

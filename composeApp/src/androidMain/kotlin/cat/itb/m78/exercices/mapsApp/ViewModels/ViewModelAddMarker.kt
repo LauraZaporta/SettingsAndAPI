@@ -11,6 +11,7 @@ class VMAddMarker : ViewModel(){
     val markerDesc = mutableStateOf("")
     val lat = mutableStateOf(0.0)
     val lon = mutableStateOf(0.0)
+    val points = mutableStateOf(0.0F)
     val addImageProcess = mutableStateOf(false)
 
     fun addMarker(){
@@ -20,6 +21,7 @@ class VMAddMarker : ViewModel(){
                 markerDesc.value,
                 lat.value,
                 lon.value,
+                points.value.toLong(),
                 null)
         }
     }

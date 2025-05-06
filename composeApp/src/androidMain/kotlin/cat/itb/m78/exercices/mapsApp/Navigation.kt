@@ -117,7 +117,7 @@ fun Navigation(){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center)
             {
-                Text("BARS APP \uD83C\uDF7A",
+                Text("BARMAPS \uD83C\uDF7A",
                     modifier = Modifier.padding(top = 50.dp),
                     color = Color.White,
                     fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
