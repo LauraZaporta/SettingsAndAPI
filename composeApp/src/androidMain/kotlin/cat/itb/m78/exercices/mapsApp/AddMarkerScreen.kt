@@ -65,19 +65,20 @@ private fun CameraPermission() {
 }
 
 @Composable
-fun AddMarkerScreen(lat : Double, lon : Double){
+fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit){
     val addMarkerVM = viewModel { VMAddMarker() }
 
     addMarkerVM.lat.value = lat
     addMarkerVM.lon.value = lon
 
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,
-        addMarkerVM.addImageProcess, addMarkerVM :: addMarker)
+        addMarkerVM.addImageProcess, addMarkerVM :: addMarker, goToMapScreen)
 }
 
 @Composable
 fun AddMarkerScreenArguments(title : MutableState<String>, description : MutableState<String>,
-                             addImageProcess : MutableState<Boolean>, addMarker: () -> Unit){
+                             addImageProcess : MutableState<Boolean>, addMarker: () -> Unit,
+                             goToMapScreen: () -> Unit){
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -167,7 +168,8 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
         Spacer(Modifier.height(30.dp))
         Button(
             modifier = Modifier.height(60.dp).width(100.dp),
-            onClick = { addMarker() },
+            onClick = { addMarker()
+                      goToMapScreen()},
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Black)
