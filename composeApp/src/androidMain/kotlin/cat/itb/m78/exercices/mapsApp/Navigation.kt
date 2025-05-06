@@ -1,8 +1,11 @@
 package cat.itb.m78.exercices.mapsApp
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -103,7 +106,21 @@ fun Navigation(){
                     label = {Text("Menu",
                         color = Color.White)}
                 )
-        }})
+        }},
+        topBar = {
+            Column(modifier = Modifier.fillMaxWidth()
+                .height(120.dp)
+                .background(color = Color.Black),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center)
+            {
+                Text("BARS APP \uD83C\uDF7A",
+                    modifier = Modifier.padding(top = 50.dp),
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                    fontSize = 5.em)
+            }
+        })
         { paddingValues ->
             Column(
                 modifier = Modifier
