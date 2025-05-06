@@ -68,6 +68,9 @@ private fun CameraPermission() {
 fun AddMarkerScreen(lat : Double, lon : Double){
     val addMarkerVM = viewModel { VMAddMarker() }
 
+    addMarkerVM.lat.value = lat
+    addMarkerVM.lon.value = lon
+
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,
         addMarkerVM.addImageProcess, addMarkerVM :: addMarker)
 }

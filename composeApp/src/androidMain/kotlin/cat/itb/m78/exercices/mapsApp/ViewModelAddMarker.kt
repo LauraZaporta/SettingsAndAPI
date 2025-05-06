@@ -9,11 +9,18 @@ class VMAddMarker : ViewModel(){
 
     val markerTitle = mutableStateOf("")
     val markerDesc = mutableStateOf("")
+    val lat = mutableStateOf(0.0)
+    val lon = mutableStateOf(0.0)
     val addImageProcess = mutableStateOf(false)
 
     fun addMarker(){
         if (markerTitle.value != "" && markerDesc.value != ""){
-            barDB.insertTest(markerTitle.value, markerDesc.value)
+            barDB.insert(
+                markerTitle.value,
+                markerDesc.value,
+                lat.value,
+                lon.value,
+                null)
         }
     }
 }

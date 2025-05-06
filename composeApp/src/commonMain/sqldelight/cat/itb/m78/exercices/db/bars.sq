@@ -10,5 +10,6 @@ CREATE TABLE bars (
 selectAll:
 SELECT * FROM bars;
 
-insertTest:
-INSERT INTO bars (title, description, latitude, longitude) VALUES (?,?, 3, 4);
+insert:
+INSERT INTO bars (title, description, latitude, longitude, image)
+VALUES (?,?, ?,?, ?);
