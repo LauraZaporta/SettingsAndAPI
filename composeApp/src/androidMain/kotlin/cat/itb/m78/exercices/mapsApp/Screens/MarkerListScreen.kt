@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.mapsApp
+package cat.itb.m78.exercices.mapsApp.Screens
 
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Column

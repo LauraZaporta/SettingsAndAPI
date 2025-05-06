@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.mapsApp
+package cat.itb.m78.exercices.mapsApp.Screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cat.itb.m78.exercices.mapsApp.ViewModels.VMMaps
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.maps.android.compose.AdvancedMarker
 import com.google.android.gms.maps.model.LatLng

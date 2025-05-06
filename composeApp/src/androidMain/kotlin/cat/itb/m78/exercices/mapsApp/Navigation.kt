@@ -34,6 +34,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import cat.itb.m78.exercices.mapsApp.Screens.AddMarkerScreen
+import cat.itb.m78.exercices.mapsApp.Screens.MapScreen
+import cat.itb.m78.exercices.mapsApp.Screens.MarkerListScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import m78exercices.composeapp.generated.resources.Audiowide_Regular

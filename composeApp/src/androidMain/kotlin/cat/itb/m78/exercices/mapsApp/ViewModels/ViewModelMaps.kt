@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.mapsApp
+package cat.itb.m78.exercices.mapsApp.ViewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
