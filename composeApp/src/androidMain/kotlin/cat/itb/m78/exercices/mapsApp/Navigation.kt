@@ -28,13 +28,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import m78exercices.composeapp.generated.resources.Audiowide_Regular
 import m78exercices.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
+@Serializable
+object Destiny{
+    @Serializable
+    data object ListScreen
+    @Serializable
+    data object MapScreen
+}
+
 @Composable
 fun Navigation(){
+    val navController = rememberNavController()
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -52,19 +66,13 @@ fun Navigation(){
                     label = { Text(text = "Map", fontSize = 3.5.em) },
                     selected = false,
                     icon = { Icon(Icons.Default.Place, contentDescription = "Map") },
-                    onClick = { }
+                    onClick = { navController.navigate( Destiny.MapScreen ) }
                 )
                 NavigationDrawerItem(
                     label = { Text(text = "List", fontSize = 3.5.em) },
                     selected = false,
                     icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-                    onClick = { }
-                )
-                NavigationDrawerItem(
-                    label = { Text(text = "Add marker", fontSize = 3.5.em) },
-                    selected = false,
-                    icon = { Icon(Icons.Default.Add, contentDescription = "Add") },
-                    onClick = { }
+                    onClick = { navController.navigate( Destiny.ListScreen ) }
                 )
             }
         }
@@ -97,7 +105,14 @@ fun Navigation(){
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddMarkerScreen()
+                NavHost(navController = navController, startDestination = Destiny.MapScreen) {
+                    composable<Destiny.MapScreen> {
+                        MapScreen()
+                    }
+                    composable<Destiny.ListScreen> {
+                        MarkerListScreen()
+                    }
+                }
             }
         }
     }
