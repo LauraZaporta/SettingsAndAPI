@@ -1,6 +1,7 @@
 package cat.itb.m78.exercices.mapsApp
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,44 +62,56 @@ fun MapScreen(goToAddMarkerScreen : (Double, Double) -> Unit) {
         }
     }
     if (mapsVM.clickedMarker.value != null){
-        OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.width(400.dp)
-                .height(200.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally)
-            {
-                Text("Add new marker",
-                    modifier = Modifier.padding(20.dp).padding(bottom = 10.dp),
-                    fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
-                    fontSize = 5.em)
-                Row(horizontalArrangement = Arrangement.Center){
-                    Button(
-                        modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
-                        onClick = { goToAddMarkerScreen(
-                            mapsVM.clickedMarker.value!!.latitude,
-                            mapsVM.clickedMarker.value!!.longitude) },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Black)
-                    ) {
-                        Text("Add",
-                            color = Color.White,
-                            fontSize = 3.em,
-                            fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
-                        )
-                    }
-                    Button(
-                        modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
-                        onClick = { mapsVM.clickedMarker.value = null },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Black)
-                    ) {
-                        Text("Cancel",
-                            color = Color.White,
-                            fontSize = 3.em,
-                            fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
-                        )
+        Column(modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            OutlinedCard(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+                border = BorderStroke(2.dp, Color.Black),
+                modifier = Modifier
+                    .size(width = 350.dp, height = 150.dp)
+                    .padding(10.dp)
+            )  {
+                Column(modifier = Modifier.width(350.dp)
+                    .height(150.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally)
+                {
+                    Text("Add new marker",
+                        modifier = Modifier.padding(10.dp).padding(bottom = 10.dp),
+                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                        fontSize = 5.em)
+                    Row(horizontalArrangement = Arrangement.Center){
+                        Button(
+                            modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
+                            onClick = { goToAddMarkerScreen(
+                                mapsVM.clickedMarker.value!!.latitude,
+                                mapsVM.clickedMarker.value!!.longitude) },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Black)
+                        ) {
+                            Text("Add",
+                                color = Color.White,
+                                fontSize = 3.em,
+                                fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
+                            )
+                        }
+                        Button(
+                            modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
+                            onClick = { mapsVM.clickedMarker.value = null },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Black)
+                        ) {
+                            Text("Cancel",
+                                color = Color.White,
+                                fontSize = 3.em,
+                                fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
+                            )
+                        }
                     }
                 }
             }
