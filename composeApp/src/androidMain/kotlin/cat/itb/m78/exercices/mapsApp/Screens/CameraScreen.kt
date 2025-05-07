@@ -89,7 +89,7 @@ fun CameraArgumentsScreen(surfaceRequest: SurfaceRequest?, savedUri: Uri?, navCo
                     modifier = Modifier.fillMaxSize()
                 )
                 Button(
-                    modifier = Modifier.height(40.dp).width(150.dp).padding(5.dp),
+                    modifier = Modifier.height(50.dp).width(150.dp).padding(5.dp),
                     onClick = { takePhoto(context) },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
