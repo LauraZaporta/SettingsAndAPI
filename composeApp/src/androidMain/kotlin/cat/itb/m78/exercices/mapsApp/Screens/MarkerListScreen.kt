@@ -5,14 +5,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,11 +40,12 @@ import org.jetbrains.compose.resources.Font
 fun MarkerListScreen(goToDetailScreen: (LatLng) -> Unit){
     val listVM = viewModel { VMMarkersList() }
 
-    MarkerListScreenArguments(listVM.markers.value, goToDetailScreen)
+    MarkerListScreenArguments(listVM.markers.value, listVM::deleteBar, goToDetailScreen)
 }
 
 @Composable
-fun MarkerListScreenArguments(markers: List<CustomMarker>, goToDetailScreen : (LatLng) -> Unit) {
+fun MarkerListScreenArguments(markers: List<CustomMarker>, deleteByLatLng: (Double, Double) -> Unit,
+                              goToDetailScreen : (LatLng) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -66,7 +73,7 @@ fun MarkerListScreenArguments(markers: List<CustomMarker>, goToDetailScreen : (L
                             Card(
                                 modifier = Modifier
                                     .width(150.dp)
-                                    .height(100.dp)
+                                    .height(135.dp)
                                     .clickable(
                                         enabled = true,
                                         onClickLabel = "Clickable card",
@@ -88,11 +95,31 @@ fun MarkerListScreenArguments(markers: List<CustomMarker>, goToDetailScreen : (L
                                         textAlign = TextAlign.Center,
                                         fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
                                     )
+                                    Spacer(Modifier.height(5.dp))
                                     Text(
                                         "Score: ${marker.points}/10",
                                         color = Color.White,
                                         fontFamily = FontFamily(Font(Res.font.Audiowide_Regular))
                                     )
+                                    Spacer(Modifier.height(15.dp))
+                                    Button(
+                                        onClick = { deleteByLatLng(marker.latLng.latitude, marker.latLng.longitude) },
+                                        modifier = Modifier
+                                            .size(30.dp),
+                                        shape = RoundedCornerShape(5.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color.White,
+                                            contentColor = Color.Black
+                                        ),
+                                        contentPadding = PaddingValues(0.dp) // Sense padding intern
+                                    ) {
+                                        Text(
+                                            "X",
+                                            fontSize = 4.em, // més clar i llegible
+                                            fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
                         }

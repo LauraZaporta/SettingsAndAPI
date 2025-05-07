@@ -16,3 +16,6 @@ SELECT * FROM bars;
 insert:
 INSERT INTO bars (title, description, latitude, longitude, points, image)
 VALUES (?,?, ?,?,?, ?);
+
+deleteByLatLng:
+DELETE FROM bars WHERE latitude = ? AND longitude = ?;

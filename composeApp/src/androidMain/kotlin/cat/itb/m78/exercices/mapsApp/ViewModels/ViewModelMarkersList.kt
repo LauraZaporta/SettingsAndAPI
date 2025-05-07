@@ -19,4 +19,16 @@ class VMMarkersList : ViewModel() {
             )
         }
     )
+
+    fun deleteBar(lat: Double, lon: Double){
+        barDB.deleteByLatLng(lat, lon)
+        markers.value = barDB.selectAll().executeAsList().map { bar ->
+            CustomMarker(
+                latLng = LatLng(bar.latitude, bar.longitude),
+                title = bar.title,
+                description = bar.description,
+                points = bar.points
+            )
+        }
+    }
 }

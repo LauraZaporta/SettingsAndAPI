@@ -20,4 +20,8 @@ class VMDetail(lat: Double, lon: Double) : ViewModel() {
             )
         }
     )
+
+    fun deleteBar(lat: Double, lon: Double){
+        barDB.deleteByLatLng(lat, lon)
+    }
 }

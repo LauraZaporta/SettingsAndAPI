@@ -4,10 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,14 +34,15 @@ import m78exercices.composeapp.generated.resources.Audiowide_Regular
 import m78exercices.composeapp.generated.resources.Res
 
 @Composable
-fun MarkerDetailScreen(lat : Double, lon : Double){
+fun MarkerDetailScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit){
     val detailVM = viewModel { VMDetail(lat, lon) }
 
-    MarkerDetailScreenArguments(detailVM.marker.value)
+    MarkerDetailScreenArguments(detailVM.marker.value, detailVM::deleteBar, goToMapScreen)
 }
 
 @Composable
-fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
+fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?, deleteByLatLng : (Double, Double) -> Unit,
+                                goToMapScreen: () -> Unit) {
     if (marker == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -61,7 +67,7 @@ fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -77,7 +83,7 @@ fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
-                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)),
+                            .clip(RoundedCornerShape(12.dp)),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -115,6 +121,19 @@ fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
                     fontSize = 4.em,
                     color = Color.White
                 )
+                Button(
+                    modifier = Modifier.height(60.dp).width(175.dp),
+                    onClick = { deleteByLatLng(marker.latLng.latitude, marker.latLng.longitude)
+                              goToMapScreen() },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White)
+                ) {
+                    Text("X Delete X",
+                        color = Color.Black,
+                        fontSize = 4.em,
+                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
+                }
             }
         }
     }

@@ -160,7 +160,7 @@ fun Navigation(){
                     composable<Destiny.DetailScreen> { backStack ->
                         val lat = backStack.toRoute<Destiny.DetailScreen>().lat
                         val lon = backStack.toRoute<Destiny.DetailScreen>().lon
-                        MarkerDetailScreen(lat, lon)
+                        MarkerDetailScreen(lat, lon, goToMapScreen = { navController.navigate(Destiny.MapScreen) })
                     }
                     composable<Destiny.AddMarkerScreen> { backStack ->
                         val lat = backStack.toRoute<Destiny.AddMarkerScreen>().lat
