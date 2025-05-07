@@ -81,21 +81,18 @@ fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
                         contentScale = ContentScale.Crop
                     )
                 }
-
                 Text(
                     text = marker.title,
                     fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
                     fontSize = 6.em,
                     color = Color.White
                 )
-
                 Text(
                     text = "Score: ${marker.points}/10",
                     fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
                     fontSize = 4.em,
                     color = Color.White
                 )
-
                 marker.description?.let {
                     Text(
                         text = "Description: $it",
@@ -106,6 +103,18 @@ fun MarkerDetailScreenArguments(marker: CustomMarkerWithImg?) {
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+                Text(
+                    text = "Lat: ${marker.latLng.latitude}",
+                    fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                    fontSize = 4.em,
+                    color = Color.White
+                )
+                Text(
+                    text = "Lng: ${marker.latLng.longitude}",
+                    fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)),
+                    fontSize = 4.em,
+                    color = Color.White
+                )
             }
         }
     }
