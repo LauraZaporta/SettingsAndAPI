@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 class VMMarkersList : ViewModel() {
     private val barDB = database.barsQueries
 
+    val search = mutableStateOf("")
     val markers = mutableStateOf(
         barDB.selectAll().executeAsList().map { bar ->
             CustomMarker(

@@ -20,7 +20,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,12 +42,13 @@ import org.jetbrains.compose.resources.Font
 fun MarkerListScreen(goToDetailScreen: (LatLng) -> Unit){
     val listVM = viewModel { VMMarkersList() }
 
-    MarkerListScreenArguments(listVM.markers.value, listVM::deleteBar, goToDetailScreen)
+    MarkerListScreenArguments(listVM.markers.value, listVM::deleteBar, listVM.search,
+        goToDetailScreen)
 }
 
 @Composable
 fun MarkerListScreenArguments(markers: List<CustomMarker>, deleteByLatLng: (Double, Double) -> Unit,
-                              goToDetailScreen : (LatLng) -> Unit) {
+                              search : MutableState<String>, goToDetailScreen : (LatLng) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -58,13 +61,25 @@ fun MarkerListScreenArguments(markers: List<CustomMarker>, deleteByLatLng: (Doub
                 fontSize = 5.em
             )
         } else {
+            OutlinedTextField(
+                modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+                value = search.value,
+                label = { Text("Search a bar by name") },
+                onValueChange = { search.value = it }
+            )
             LazyColumn(
                 modifier = Modifier
                     .padding(15.dp)
                     .padding(bottom = 80.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
-                items(markers.chunked(2)) { rowMarkers ->
+                val filteredMarkers = markers.filter {it.title.contains(search.value, ignoreCase = true)}
+                if (filteredMarkers.isEmpty()){
+                    item{
+                        Text("No bar found", fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
+                    }
+                }
+                items(filteredMarkers.chunked(2)) { rowMarkers ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
