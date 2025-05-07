@@ -1,5 +1,6 @@
 package cat.itb.m78.exercices.mapsApp
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,11 +40,13 @@ import cat.itb.m78.exercices.mapsApp.Screens.CameraScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MapScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MarkerDetailScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MarkerListScreen
+import cat.itb.m78.exercices.mapsApp.Screens.PHOTO_URI_KEY
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import m78exercices.composeapp.generated.resources.Audiowide_Regular
 import m78exercices.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
+import androidx.core.net.toUri
 
 @Serializable
 object Destiny{
@@ -151,7 +154,6 @@ fun Navigation(){
                     }
                     composable<Destiny.CameraScreen> {
                         CameraScreen(
-                            goToAddMarkerScreen = {  },
                             navController = navController
                         )
                     }
@@ -163,7 +165,16 @@ fun Navigation(){
                     composable<Destiny.AddMarkerScreen> { backStack ->
                         val lat = backStack.toRoute<Destiny.AddMarkerScreen>().lat
                         val lon = backStack.toRoute<Destiny.AddMarkerScreen>().lon
-                        AddMarkerScreen(lat, lon) { navController.navigate(Destiny.MapScreen) }
+                        val imageUriStr = backStack.savedStateHandle.get<String>(PHOTO_URI_KEY)
+                        val imageUri = imageUriStr?.toUri()
+
+                        AddMarkerScreen(
+                            lat = lat,
+                            lon = lon,
+                            imageUri = imageUri,
+                            goToMapScreen = { navController.navigate(Destiny.MapScreen) },
+                            goToCameraScreen = { navController.navigate(Destiny.CameraScreen) }
+                        )
                     }
                 }
             }

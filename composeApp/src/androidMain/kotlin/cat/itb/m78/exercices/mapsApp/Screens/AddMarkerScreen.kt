@@ -1,5 +1,8 @@
 package cat.itb.m78.exercices.mapsApp.Screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,13 +30,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.mapsApp.ViewModels.VMAddMarker
+import coil3.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -41,30 +48,6 @@ import com.google.accompanist.permissions.shouldShowRationale
 import m78exercices.composeapp.generated.resources.Audiowide_Regular
 import m78exercices.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-private fun CameraPermission() {
-    val cameraPermissionState = rememberPermissionState(
-        android.Manifest.permission.CAMERA
-    )
-    if (cameraPermissionState.status.isGranted) {
-        Text("Camera permission Granted")
-    } else {
-        Column {
-            val textToShow = if (cameraPermissionState.status.shouldShowRationale) {
-                "The camera is important for this app. Please grant the permission."
-            } else {
-                "Camera permission required for this feature to be available. " +
-                        "Please grant the permission"
-            }
-            Text(textToShow)
-            Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                Text("Request permission")
-            }
-        }
-    }
-}
 
 @Composable
 private fun GeneratePhotoButton(function : () -> Unit, text : String){
@@ -83,20 +66,37 @@ private fun GeneratePhotoButton(function : () -> Unit, text : String){
 }
 
 @Composable
-fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit){
+fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit, imageUri: Uri?,
+                    goToCameraScreen : () -> Unit)
+{
     val addMarkerVM = viewModel { VMAddMarker() }
 
     addMarkerVM.lat.value = lat
     addMarkerVM.lon.value = lon
 
-    AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc,
-        addMarkerVM.addImageProcess, addMarkerVM.points, addMarkerVM :: addMarker, goToMapScreen)
+    if (imageUri != null) {
+        addMarkerVM.markerImg.value = imageUri
+    }
+
+    AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc, addMarkerVM.markerImg,
+        addMarkerVM.addImageProcess, addMarkerVM.points, addMarkerVM :: addMarker, goToMapScreen,
+        goToCameraScreen)
 }
 
 @Composable
 fun AddMarkerScreenArguments(title : MutableState<String>, description : MutableState<String>,
-                             addImageProcess : MutableState<Boolean>, points : MutableState<Float>,
-                             addMarker: () -> Unit, goToMapScreen: () -> Unit){
+                             image : MutableState<Uri?>, addImageProcess : MutableState<Boolean>,
+                             points : MutableState<Float>, addMarker: () -> Unit, goToMapScreen: () -> Unit,
+                             goToCameraScreen: () -> Unit)
+{
+    val context = LocalContext.current
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            image.value = uri
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -151,28 +151,42 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
         Spacer(Modifier.height(15.dp))
 
         // Imatge
-        Column(modifier = Modifier
-            .border(BorderStroke(1.dp, SolidColor(Color.Black)),
-                shape = RoundedCornerShape(7.dp))
-            .width(200.dp)
-            .height(120.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally)
-        {
-            IconButton( onClick = {addImageProcess.value = true} )
-            {
-                Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Camera",
-                    modifier = Modifier.size(100.dp))
-            }
-            Spacer(Modifier.height(5.dp))
-            Text("Add image", fontSize = 3.5.em)
-        }
-        if (addImageProcess.value){
+        if (image.value != null) {
+            AsyncImage(
+                model = image.value,
+                contentDescription = "Captured image",
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
             Spacer(Modifier.height(10.dp))
-            Row(){
-                GeneratePhotoButton({}, "Photo")
-                GeneratePhotoButton({}, "Gallery")
-                GeneratePhotoButton({addImageProcess.value = false}, "Cancel")
+        } else {
+            Column(modifier = Modifier
+                .border(BorderStroke(1.dp, SolidColor(Color.Black)),
+                    shape = RoundedCornerShape(7.dp))
+                .width(200.dp)
+                .height(120.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally)
+            {
+                IconButton( onClick = {addImageProcess.value = true} )
+                {
+                    Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Camera",
+                        modifier = Modifier.size(100.dp))
+                }
+                Spacer(Modifier.height(5.dp))
+                Text("Add image", fontSize = 3.5.em)
+            }
+            if (addImageProcess.value){
+                Spacer(Modifier.height(10.dp))
+                Row(){
+                    GeneratePhotoButton({ goToCameraScreen() }, "Photo")
+                    GeneratePhotoButton({ galleryLauncher.launch("image/*") }, "Gallery")
+                    GeneratePhotoButton({addImageProcess.value = false}, "Cancel")
+                }
             }
         }
 

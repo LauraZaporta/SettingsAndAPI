@@ -46,7 +46,7 @@ import org.jetbrains.compose.resources.Font
 const val PHOTO_URI_KEY = "photo_uri"
 
 @Composable
-fun CameraScreen(goToAddMarkerScreen: () -> Unit, navController: NavController) {
+fun CameraScreen(navController: NavController) {
     val cameraVM = viewModel { VMCamera() }
 
     CameraArgumentsScreen(cameraVM.surferRequest.value, cameraVM.savedPhotoUri.value, navController,
@@ -89,7 +89,7 @@ fun CameraArgumentsScreen(surfaceRequest: SurfaceRequest?, savedUri: Uri?, navCo
                     modifier = Modifier.fillMaxSize()
                 )
                 Button(
-                    modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
+                    modifier = Modifier.height(40.dp).width(150.dp).padding(5.dp),
                     onClick = { takePhoto(context) },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -139,10 +139,10 @@ fun CameraArgumentsScreen(surfaceRequest: SurfaceRequest?, savedUri: Uri?, navCo
                     )
                     Button(
                         onClick = { cameraPermissionState.launchPermissionRequest() },
-                        modifier = Modifier.fillMaxWidth(0.6f),
-                        shape = RoundedCornerShape(8.dp)
+                        modifier = Modifier.fillMaxWidth(0.6f).background(Color.White),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
-                        Text("Request permission")
+                        Text("Request permission", color = Color.Black)
                     }
                 }
             }

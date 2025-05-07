@@ -1,5 +1,6 @@
 package cat.itb.m78.exercices.mapsApp.ViewModels
 
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
@@ -9,6 +10,7 @@ class VMAddMarker : ViewModel(){
 
     val markerTitle = mutableStateOf("")
     val markerDesc = mutableStateOf("")
+    val markerImg = mutableStateOf<Uri?>(null)
     val lat = mutableStateOf(0.0)
     val lon = mutableStateOf(0.0)
     val points = mutableStateOf(0.0F)
@@ -22,7 +24,7 @@ class VMAddMarker : ViewModel(){
                 lat.value,
                 lon.value,
                 points.value.toLong(),
-                null)
+                markerImg.value.toString())
         }
     }
 }
