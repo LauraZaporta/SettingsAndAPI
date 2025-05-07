@@ -3,6 +3,7 @@ package cat.itb.m78.exercices.mapsApp.ViewModels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
+import cat.itb.m78.exercices.mapsApp.DTOs.CustomMarker
 import com.google.android.gms.maps.model.LatLng
 
 class VMMarkersList : ViewModel() {

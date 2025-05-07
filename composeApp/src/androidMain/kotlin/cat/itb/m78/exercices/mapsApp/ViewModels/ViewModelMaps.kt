@@ -3,14 +3,8 @@ package cat.itb.m78.exercices.mapsApp.ViewModels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
+import cat.itb.m78.exercices.mapsApp.DTOs.CustomMarker
 import com.google.android.gms.maps.model.LatLng
-
-data class CustomMarker(
-    val latLng : LatLng,
-    val title : String,
-    val description : String?,
-    val points : Long
-)
 
 class VMMaps : ViewModel(){
     private val barDB = database.barsQueries

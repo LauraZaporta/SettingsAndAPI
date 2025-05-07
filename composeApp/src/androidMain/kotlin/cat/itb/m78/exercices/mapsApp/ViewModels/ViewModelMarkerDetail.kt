@@ -4,14 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
 import com.google.android.gms.maps.model.LatLng
-
-data class CustomMarkerWithImg(
-    val latLng : LatLng,
-    val title : String,
-    val description : String?,
-    val points : Long,
-    val image : String?
-)
+import cat.itb.m78.exercices.mapsApp.DTOs.CustomMarkerWithImg
 
 class VMDetail(lat: Double, lon: Double) : ViewModel() {
     private val barDB = database.barsQueries

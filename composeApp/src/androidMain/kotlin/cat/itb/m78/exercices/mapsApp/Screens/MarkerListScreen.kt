@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.mapsApp.ViewModels.CustomMarker
+import cat.itb.m78.exercices.mapsApp.DTOs.CustomMarker
 import cat.itb.m78.exercices.mapsApp.ViewModels.VMMarkersList
 import com.google.android.gms.maps.model.LatLng
 import m78exercices.composeapp.generated.resources.Audiowide_Regular
