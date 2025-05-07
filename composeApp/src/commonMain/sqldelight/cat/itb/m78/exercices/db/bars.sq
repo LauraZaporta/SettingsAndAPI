@@ -7,6 +7,9 @@ CREATE TABLE bars (
     image TEXT
 );
 
+selectByLatLng:
+SELECT * FROM bars WHERE latitude = ? AND longitude = ?;
+
 selectAll:
 SELECT * FROM bars;
 

@@ -5,14 +5,7 @@ import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
 import com.google.android.gms.maps.model.LatLng
 
-data class CustomMarker(
-    val latLng : LatLng,
-    val title : String,
-    val description : String?,
-    val points : Long
-)
-
-class VMMaps : ViewModel(){
+class VMMarkersList : ViewModel() {
     private val barDB = database.barsQueries
 
     val markers = mutableStateOf(
@@ -25,5 +18,4 @@ class VMMaps : ViewModel(){
             )
         }
     )
-    var clickedMarker = mutableStateOf<LatLng?>(null)
 }
