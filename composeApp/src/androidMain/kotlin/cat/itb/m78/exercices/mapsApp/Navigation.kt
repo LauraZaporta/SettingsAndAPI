@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import cat.itb.m78.exercices.mapsApp.Screens.AddMarkerScreen
+import cat.itb.m78.exercices.mapsApp.Screens.CameraScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MapScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MarkerDetailScreen
 import cat.itb.m78.exercices.mapsApp.Screens.MarkerListScreen
@@ -50,6 +51,8 @@ object Destiny{
     data object ListScreen
     @Serializable
     data object MapScreen
+    @Serializable
+    data object CameraScreen
     @Serializable
     data class AddMarkerScreen(val lat : Double, val lon : Double)
     @Serializable
@@ -145,6 +148,12 @@ fun Navigation(){
                         MarkerListScreen( goToDetailScreen = {
                             navController.navigate(Destiny.DetailScreen(it.latitude, it.longitude))
                         })
+                    }
+                    composable<Destiny.CameraScreen> {
+                        CameraScreen(
+                            goToAddMarkerScreen = {  },
+                            navController = navController
+                        )
                     }
                     composable<Destiny.DetailScreen> { backStack ->
                         val lat = backStack.toRoute<Destiny.DetailScreen>().lat

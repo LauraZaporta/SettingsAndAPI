@@ -67,7 +67,7 @@ private fun CameraPermission() {
 }
 
 @Composable
-fun GeneratePhotoButton(function : () -> Unit, text : String){
+private fun GeneratePhotoButton(function : () -> Unit, text : String){
     Button(
         modifier = Modifier.height(40.dp).width(120.dp).padding(3.dp),
         onClick = { function() },
