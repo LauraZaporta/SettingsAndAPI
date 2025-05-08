@@ -14,11 +14,6 @@ class VMAddMarker : ViewModel(){
     private val imageInsert = mutableStateOf<String?>(null)
     private val tempCheckNull = mutableStateOf<String?>(null)
 
-    val isThereLastPhoto = mutableStateOf({
-        val tempCheckNull = mutableStateOf<String?>(null)
-        tempCheckNull.value = settings["key"]
-
-    })
     val markerTitle = mutableStateOf("")
     val markerDesc = mutableStateOf("")
     val markerImg = mutableStateOf<Uri?>(null)
