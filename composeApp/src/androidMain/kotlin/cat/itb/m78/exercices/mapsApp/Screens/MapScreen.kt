@@ -39,6 +39,8 @@ import org.jetbrains.compose.resources.Font
 @Composable
 fun MapScreen(goToAddMarkerScreen : (Double, Double) -> Unit) {
     val mapsVM = viewModel { VMMaps() }
+    val itbLan = 41.45348680085625
+    val itbLon = 2.1863329127456512
 
     GoogleMap(
         googleMapOptionsFactory = {
@@ -66,6 +68,10 @@ fun MapScreen(goToAddMarkerScreen : (Double, Double) -> Unit) {
                 contentDescription = marker.description
             )
         }
+        AdvancedMarker(
+            state = MarkerState(position = LatLng(itbLan, itbLon)),
+            title = "ITB"
+        )
     }
     if (mapsVM.clickedMarker.value != null){
         Column(modifier = Modifier.fillMaxSize(),

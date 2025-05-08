@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.awaitInstance
+import cat.itb.m78.exercices.mapsApp.settings
 import kotlinx.coroutines.awaitCancellation
 
 class VMCamera : ViewModel(){
@@ -78,6 +79,7 @@ class VMCamera : ViewModel(){
                     }
                     Log.d("CameraViewModel", "Photo saved: ${output.savedUri}")
                     _savedPhotoUri.value = output.savedUri
+                    settings.putString("key", _savedPhotoUri.value.toString())
                 }
             }
         )

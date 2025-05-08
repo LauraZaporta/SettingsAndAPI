@@ -81,14 +81,14 @@ fun AddMarkerScreen(lat : Double, lon : Double, goToMapScreen : () -> Unit, imag
 
     AddMarkerScreenArguments(addMarkerVM.markerTitle, addMarkerVM.markerDesc, addMarkerVM.markerImg,
         addMarkerVM.addImageProcess, addMarkerVM.points, addMarkerVM :: addMarker, goToMapScreen,
-        goToCameraScreen)
+        goToCameraScreen, addMarkerVM::assignLastPhoto)
 }
 
 @Composable
 fun AddMarkerScreenArguments(title : MutableState<String>, description : MutableState<String>,
                              image : MutableState<Uri?>, addImageProcess : MutableState<Boolean>,
                              points : MutableState<Float>, addMarker: () -> Unit, goToMapScreen: () -> Unit,
-                             goToCameraScreen: () -> Unit)
+                             goToCameraScreen: () -> Unit, assignLastPhoto: () -> Unit)
 {
     val context = LocalContext.current
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -196,10 +196,22 @@ fun AddMarkerScreenArguments(title : MutableState<String>, description : Mutable
                     GeneratePhotoButton({ galleryLauncher.launch("image/*") }, "Gallery")
                     GeneratePhotoButton({addImageProcess.value = false}, "Cancel")
                 }
+                Button(
+                    modifier = Modifier.height(40.dp).width(150.dp).padding(3.dp),
+                    onClick = { assignLastPhoto() },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black)
+                ) {
+                    Text("Last photo",
+                        color = Color.White,
+                        fontSize = 3.em,
+                        fontFamily = FontFamily(Font(Res.font.Audiowide_Regular)))
+                }
             }
         }
 
-        Spacer(Modifier.height(30.dp))
+        Spacer(Modifier.height(20.dp))
         Button(
             modifier = Modifier.height(60.dp).width(100.dp),
             onClick = { addMarker()

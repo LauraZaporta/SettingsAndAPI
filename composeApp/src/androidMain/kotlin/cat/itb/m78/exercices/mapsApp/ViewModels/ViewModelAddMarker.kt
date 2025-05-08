@@ -2,13 +2,23 @@ package cat.itb.m78.exercices.mapsApp.ViewModels
 
 import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.db.database
+import cat.itb.m78.exercices.mapsApp.settings
+import com.russhwolf.settings.get
+
 
 class VMAddMarker : ViewModel(){
     private val barDB = database.barsQueries
     private val imageInsert = mutableStateOf<String?>(null)
+    private val tempCheckNull = mutableStateOf<String?>(null)
 
+    val isThereLastPhoto = mutableStateOf({
+        val tempCheckNull = mutableStateOf<String?>(null)
+        tempCheckNull.value = settings["key"]
+
+    })
     val markerTitle = mutableStateOf("")
     val markerDesc = mutableStateOf("")
     val markerImg = mutableStateOf<Uri?>(null)
@@ -30,6 +40,15 @@ class VMAddMarker : ViewModel(){
                 lon.value,
                 points.value.toLong(),
                 imageInsert.value)
+        }
+    }
+    private fun isThereLastPhoto() : Boolean {
+        tempCheckNull.value = settings["key"]
+        return tempCheckNull.value != null
+    }
+    fun assignLastPhoto(){
+        if (isThereLastPhoto()) {
+            markerImg.value = tempCheckNull.value!!.toUri()
         }
     }
 }

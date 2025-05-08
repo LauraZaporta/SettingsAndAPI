@@ -135,7 +135,7 @@ fun CameraArgumentsScreen(surfaceRequest: SurfaceRequest?, savedUri: Uri?, navCo
                         text = textToShow,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = Color.White
                     )
                     Button(
                         onClick = { cameraPermissionState.launchPermissionRequest() },
